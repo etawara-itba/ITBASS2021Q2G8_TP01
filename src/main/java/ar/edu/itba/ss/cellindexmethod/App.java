@@ -24,10 +24,10 @@ public class App
         double radius, coordX, coordY;
         for (i = 0; i < N; i++) {
             String staticLine = staticReader.readLine();
-            String[] splitStaticLines = staticLine.split("\\s+");
+            String[] splitStaticLines = staticLine.split("\\t+");
             radius = Double.parseDouble(splitStaticLines[0]);
             String dynamicLine = dynamicReader.readLine();
-            String[] splitDynamicLines = dynamicLine.split("\\s+");
+            String[] splitDynamicLines = dynamicLine.split("\\t+");
             coordX = Double.parseDouble(splitDynamicLines[0]);
             coordY = Double.parseDouble(splitDynamicLines[1]);
             particleList.add(new Particle(coordX, coordY, i, radius));
@@ -36,7 +36,7 @@ public class App
         staticReaderRadius.readLine();
         staticReaderRadius.readLine();
         String staticLineRadius = staticReaderRadius.readLine();
-        String[] splitStaticLinesRadius = staticLineRadius.split("\\s+");
+        String[] splitStaticLinesRadius = staticLineRadius.split("\\t+");
         Double r = Double.parseDouble(splitStaticLinesRadius[0]);
 
 
@@ -49,31 +49,23 @@ public class App
 
         FileWriter closestsParticlesBF = new FileWriter("outputBF.txt");
 
-        closestsParticlesBF.write("Total time: " + totalTimeBF.toMillis() + " [ms]\n");
+        closestsParticlesBF.write("Method:\t" + BruteForceMethod.methodKey + "\t[ms]\n");
+        closestsParticlesBF.write("Total time:\t" + totalTimeBF.toMillis() + "\t[ms]\n");
         // itero por todas las claves
         for(Particle particle : resultsBF.keySet()) {
             // si la partícula tiene valores asociados (partículas cercanas) las escribo en el output
             if( resultsBF.get(particle).size() > 0 ) {
-                closestsParticlesBF.write(particle.getParticleId() + " : ");
+                closestsParticlesBF.write("[");
+                closestsParticlesBF.write(String.valueOf(particle.getParticleId()));
                 // itero por todas las partículas cercanas asociadas con la key
                 for (Particle closestParticle : resultsBF.get(particle)) {
-                    closestsParticlesBF.write(closestParticle.getParticleId() + " ");
+                    closestsParticlesBF.write("\t" + closestParticle.getParticleId());
                 }
+                closestsParticlesBF.write("]");
                 closestsParticlesBF.write("\n");
             }
         }
         System.out.println("Salida generada");
         closestsParticlesBF.close();
-
-
-
-
-
-
-
-
-
     }
-    
-
 }

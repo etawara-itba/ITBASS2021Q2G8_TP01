@@ -53,7 +53,7 @@ static_file.write(str(L))
 for particle in particles:
     static_file.write('\n')
     static_file.write('%.4F' % particle.radius)
-    static_file.write(' ')
+    static_file.write('\t')
     static_file.write('color')
 static_file.close()
 
@@ -62,12 +62,12 @@ dynamic_file.write('0')
 for particle in particles:
     dynamic_file.write('\n')
     dynamic_file.write('{}'.format(particle.coordX))
-    dynamic_file.write(' ')
+    dynamic_file.write('\t')
     dynamic_file.write('{}'.format(particle.coordY))
-    dynamic_file.write(' ')
+    dynamic_file.write('\t')
     # la velocidad inicial es cero tanto en el eje x como en el y
     dynamic_file.write(str(0))
-    dynamic_file.write(' ')
+    dynamic_file.write('\t')
     dynamic_file.write(str(0))
 dynamic_file.close()
 

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CellIndexMethod {
+
+    public static final String methodKey = "CIM";
+
     private final int m;
     private final double l;
     private final double r;

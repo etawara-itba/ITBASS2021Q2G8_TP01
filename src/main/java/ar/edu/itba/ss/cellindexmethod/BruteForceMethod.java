@@ -5,6 +5,9 @@ import java.util.*;
 import static java.lang.Math.sqrt;
 
 public class BruteForceMethod {
+
+	public static final String methodKey = "BF";
+
 	private long N;
 	private long L;
 	private double Rc;
