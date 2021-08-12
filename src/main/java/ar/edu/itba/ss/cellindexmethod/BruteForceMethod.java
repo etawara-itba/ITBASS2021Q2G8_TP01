@@ -33,12 +33,8 @@ public class BruteForceMethod {
 			for (Particle particle2 : this.particlesList) {
 				if ( !particlesUsed.contains(particle2) && !particle2.equals(particle1)) {
 					if (isClosestParticle(particle1, particle2)) {
-						if(this.closestParticles.get(particle1).isEmpty()){
-							this.closestParticles.put(particle1, new HashSet<>());
-						}
-						if(this.closestParticles.get(particle2).isEmpty()){
-							this.closestParticles.put(particle2, new HashSet<>());
-						}
+						this.closestParticles.putIfAbsent(particle1,new HashSet<>());
+						this.closestParticles.putIfAbsent(particle2,new HashSet<>());
 						this.closestParticles.get(particle1).add(particle2);
 						this.closestParticles.get(particle2).add(particle1);
 					}

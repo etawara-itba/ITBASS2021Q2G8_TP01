@@ -46,7 +46,7 @@ for i in range(N):
     particles.append(Particule(i + 1, random.uniform(0, L), random.uniform(0, L), radius))
 
 
-static_file = open('Static File.txt', "w")
+static_file = open('StaticFile.txt', "w")
 static_file.write(str(N))
 static_file.write('\n')
 static_file.write(str(L))
@@ -57,7 +57,7 @@ for particle in particles:
     static_file.write('color')
 static_file.close()
 
-dynamic_file = open('Dynamic File.txt', "w")
+dynamic_file = open('DynamicFile.txt', "w")
 dynamic_file.write('0')
 for particle in particles:
     dynamic_file.write('\n')
