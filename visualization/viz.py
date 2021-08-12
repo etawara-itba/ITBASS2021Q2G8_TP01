@@ -6,15 +6,16 @@ import re
 
 
 def main(argv):
-    if len(argv) < 5:
+    if len(argv) < 6:
         raise Exception(
             "Cantidad erronea de argumentos, respetar el siguiente órden:" + "\n" +
             "1- id de partícula" + "\n" +
             "2- archivo de input estático" + "\n" +
             "3- archivo de input dinámico" + "\n" +
             "4- archivo de vecinos" + "\n" +
-            "5- tamaño de grilla" + "\n" +
-            "6- tiempo a utilizar del archivo estático, opcional (default: 0)"
+            "5- radio de interacción" + "\n" +
+            "6- tamaño de grilla" + "\n" +
+            "7- tiempo a utilizar del archivo estático, opcional (default: 0)"
         )
 
     # Args to local variables
@@ -22,31 +23,48 @@ def main(argv):
     input_static_path = argv[1]
     input_dynamic_path = argv[2]
     neighbours_path = argv[3]
-    cell_size = float(argv[4])
-    time = argv[5] if (len(argv) > 5) else 0
+    interaction_radius = float(argv[4])
+    cell_size = float(argv[5])
+    time = argv[6] if (len(argv) > 6) else 0
 
     # Fetch plot data
     particles, length, radius = get_particles_static(input_static_path)
     particle_time, pos_x, pos_y = get_particles_dynamic(input_dynamic_path, time, particles)
     method_key, simulation_time, neighbours = get_neighbours(neighbours_path)
-    colors, zorder = get_colors(particle, particles, neighbours)
+    category = get_category(particle, particles, neighbours)
 
     # Plot
-    plot(particles, particle_time, cell_size, length, radius, pos_x, pos_y, colors, zorder)
+    plot(particles, particle_time, interaction_radius, cell_size, length, radius, pos_x, pos_y, category)
 
 
-def plot(particles, time, cell_size, length, radius, pos_x, pos_y, colors, zorder):
-    circles = []
+def plot(particles, time, interaction_radius, cell_size, length, radius, pos_x, pos_y, category):
+    c_particle = []
+    c_neighbours = []
+    c_others = []
 
     fig, ax = plt.subplots()
 
     for i in range(particles):
-        circles.append(
-            plt.Circle((pos_x[i], pos_y[i]), radius=radius[i], linewidth=0, color=colors[i], zorder=zorder[i]))
+
+        circle = plt.Circle((pos_x[i], pos_y[i]), radius=radius[i], linewidth=0, color=get_color(category[i]))
+
+        if category[i] == 0:
+            interaction_radius = plt.Circle((pos_x[i], pos_y[i]), radius=interaction_radius, linewidth=1,
+                                            fill=False, facecolor=None, edgecolor=get_color(category[i]))
+            c_particle.append(interaction_radius)
+            c_particle.append(circle)
+        elif category[i] == 1:
+            c_neighbours.append(circle)
+        else:
+            c_others.append(circle)
         ax.text(x=pos_x[i], y=pos_y[i], s=str(i))
 
-    c = matplotlib.collections.PatchCollection(circles, match_original=True)
-    ax.add_collection(c)
+    col_others = matplotlib.collections.PatchCollection(c_others, match_original=True)
+    ax.add_collection(col_others)
+    col_neighbours = matplotlib.collections.PatchCollection(c_neighbours, match_original=True)
+    ax.add_collection(col_neighbours)
+    col_particle = matplotlib.collections.PatchCollection(c_particle, match_original=True)
+    ax.add_collection(col_particle)
 
     ax.set_xlim([0, length])
     ax.set_ylim([0, length])
@@ -131,23 +149,33 @@ def get_neighbours(neighbours_path):
     return method_key, time, neighbours
 
 
-def get_colors(particle, particles, neighbours, color_particle="b", color_neighbour="g", color_other="r"):
-    colors = []
-    zorder = []
+def get_category(particle, particles, neighbours):
+    category = []
     particle_neighbours = neighbours[particle]
 
     for i in range(particles):
         if i == particle:
-            colors.append(color_particle)
-            zorder.append(10)
+            category.append(0)
         elif i in particle_neighbours:
-            colors.append(color_neighbour)
-            zorder.append(5)
+            category.append(1)
         else:
-            colors.append(color_other)
-            zorder.append(0)
+            category.append(2)
 
-    return colors, zorder
+    return category
+
+
+def get_color(category):
+    color_particle = "b"
+    color_neighbour = "g"
+    color_other = "r"
+
+    colors = {
+        0: color_particle,
+        1: color_neighbour,
+        2: color_other
+    }
+
+    return colors[category]
 
 
 if __name__ == '__main__':
