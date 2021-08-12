@@ -66,6 +66,10 @@ public class Particle implements Comparable<Particle> {
 		return Math.sqrt(Math.pow(coordX - particle.getCoordX(), 2) + Math.pow(coordY - particle.getCoordY(), 2)) - radius - particle.getRadius();
 	}
 
+	public Boolean hasNeighbor(){
+		return !this.neighbors.isEmpty();
+	}
+
 	public double getPeriodicDistanceTo(Particle particle, double l) {
 		double dx = Math.abs(this.coordX - particle.getCoordX());
 		if (dx > l / 2)

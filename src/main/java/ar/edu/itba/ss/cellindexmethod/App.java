@@ -65,7 +65,38 @@ public class App
                 closestsParticlesBF.write("\n");
             }
         }
-        System.out.println("Salida generada");
+        System.out.println("Salida BF generada");
         closestsParticlesBF.close();
+
+
+        int m = 10;
+        CellIndexMethod cim = new CellIndexMethod(m, L, r, true);
+        Instant startTimeCim = Instant.now();
+        cim.run(particleList);
+        Instant endTimeCim = Instant.now();
+        Duration totalTimeCim = Duration.between(startTimeCim,endTimeCim);
+
+        FileWriter closestsParticlesCim = new FileWriter("outputCim.txt");
+
+        closestsParticlesCim.write("Method:\t" + CellIndexMethod.methodKey + "\t[ms]\n");
+        closestsParticlesCim.write("Total time:\t" + totalTimeCim.toMillis() + "\t[ms]\n");
+        // itero por todas las claves
+        for(Particle particle : particleList) {
+            // si la partícula tiene valores asociados (partículas cercanas) las escribo en el output
+            if( particle.hasNeighbor()) {
+                closestsParticlesCim.write("[");
+                closestsParticlesCim.write(String.valueOf(particle.getParticleId()));
+                // itero por todas las partículas cercanas asociadas con la key
+                for (Particle closestParticle : particle.getNeighbors()) {
+                    closestsParticlesCim.write("\t" + closestParticle.getParticleId());
+                }
+                closestsParticlesCim.write("]");
+                closestsParticlesCim.write("\n");
+            }
+        }
+        System.out.println("Salida CIM generada");
+        closestsParticlesCim.close();
+
+
     }
 }
